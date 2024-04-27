@@ -2,6 +2,7 @@ from flask import Flask, request
 import requests
 import json
 import socket
+import random
 
 app = Flask(__name__)
 
@@ -22,7 +23,7 @@ def getIpAddress():
     return Ip
 
 def sendDiscordMessage(humidity, message="I am thirsty!"):
-    webhook_url = config["WEBHOOK_URL"][1]
+    webhook_url = config["WEBHOOK_URL"][random.randint(0, len(config["WEBHOOK_URL"])-1)]
     payload = {
         "username": "Plenty Planty Plant",
         "avatar_url": "https://watchandlearn.scholastic.com/content/dam/classroom-magazines/watchandlearn/videos/animals-and-plants/plants/what-are-plants-/What-Are-Plants.jpg",

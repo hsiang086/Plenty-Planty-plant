@@ -14,9 +14,10 @@ To install and run the server, follow these steps:
     "WEBHOOK_URL": [
         "url1",
         "url2",
-        ...
+        "..."
     ], 
     "DISCORD_TOKEN": "your_discord_bot_token",
+    "PREFIX": "your_discord_bot_prefix",
 }
 ```
 5. Run `python server.py` to start the server
