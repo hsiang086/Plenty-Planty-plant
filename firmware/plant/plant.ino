@@ -1,18 +1,10 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "phil's home";
-const char* password = "Fabiowu20070806";
-
-String serverName = "http://192.168.1.109:1588/api/v1/humidity";
-
-const int soil_sensor = 36;
-
-unsigned long lastTime = 0;
-unsigned long timerDelay = 5000; // 10 seconds
+#include "credentials.h"
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(serial_baud_rate);
     pinMode(soil_sensor,INPUT);
     WiFi.begin(ssid, password);
     Serial.println(String("I am connecting to ") + ssid + String("!"));
@@ -30,8 +22,12 @@ void setup() {
 void loop() {
     int soil_moisture = analogRead(soil_sensor);
     if ((millis() - lastTime) > timerDelay) {
-        if (soil_moisture > 2000) {
+        if (soil_moisture > 2000 && soil_moisture <= 4000) {
             sendRequest(soil_moisture);
+        } else if (soil_moisture > 4000) {
+            Serial.print("Soil moisture: ");
+            Serial.println(soil_moisture);
+            Serial.println("Not in use, please check the sensor.");
         } else {
             Serial.print("Soil moisture: ");
             Serial.println(soil_moisture);

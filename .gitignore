@@ -262,6 +262,8 @@ pyrightconfig.json
 # json
 config.json
 
+firmware/plant/credentials.h
+
 # vscode
 .vscode/
 
