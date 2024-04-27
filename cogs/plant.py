@@ -9,8 +9,13 @@ Version: 6.1.0
 from discord.ext import commands
 from discord.ext.commands import Context
 
+import aiohttp
 
-# Here we name the cog and create a new class for the cog.
+async def fetch_data(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.text()
+        
 class Plant(commands.Cog, name="Plant"):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -18,19 +23,20 @@ class Plant(commands.Cog, name="Plant"):
     # Here you can just add your own commands, you'll always need to provide "self" as first parameter.
 
     @commands.hybrid_command(
-        name="testcommand",
-        description="This is a testing command that does nothing.",
+        name="ledon",
+        description="Turn on the LED.",
     )
-    async def testcommand(self, context: Context) -> None:
-        """
-        This is a testing command that does nothing.
-
-        :param context: The application command context.
-        """
-        # Do your stuff here
-
-        # Don't forget to remove "pass", I added this just because there's no content in the method.
-        await context.send("This is a test command.")
+    async def ledon(self, context: Context) -> None:
+        res = await fetch_data("http://192.168.1.110/api/v1/led?color=1")
+        await context.send(res)
+        
+    @commands.hybrid_command(
+        name="ledoff",
+        description="Turn off the LED.",
+    )
+    async def ledoff(self, context: Context) -> None:
+        res = await fetch_data("http://192.168.1.110/api/v1/led?color=0")
+        await context.send(res)
 
 
 # And then we finally add the cog to the bot so that it can load, unload, reload and use it's content.
