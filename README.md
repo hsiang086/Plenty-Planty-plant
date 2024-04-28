@@ -20,7 +20,7 @@ To install and run the server, follow these steps:
     "PREFIX": "your_discord_bot_prefix",
 }
 ```
-5. Run `python server.py` to start the server
+5. Run `python server.py` in the `server` directory to start the server
 6. Run `python bot.py` to start the bot
 
 after that, you can compile and upload the firmware to the ESP32. The firmware is located in the `firmware/plant` directory.
@@ -34,6 +34,8 @@ const char* ssid =     "********";
 const char* password = "********";
 
 const String serverName = "http://192.168.1.109:1588/api/v1/humidity";
+
+String ledStatus;
 
 unsigned long lastTime =        0;
 unsigned long timerDelay =   5000;

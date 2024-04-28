@@ -27,7 +27,7 @@ class Plant(commands.Cog, name="Plant"):
         description="Turn on the LED.",
     )
     async def ledon(self, context: Context) -> None:
-        res = await fetch_data("http://192.168.1.110/api/v1/led?color=1")
+        res = await fetch_data("http://127.0.0.1:1588/api/v1/setled?status=on")
         await context.send(res)
         
     @commands.hybrid_command(
@@ -35,7 +35,7 @@ class Plant(commands.Cog, name="Plant"):
         description="Turn off the LED.",
     )
     async def ledoff(self, context: Context) -> None:
-        res = await fetch_data("http://192.168.1.110/api/v1/led?color=0")
+        res = await fetch_data("http://127.0.0.1:1588/api/v1/setled?status=off")
         await context.send(res)
 
 
