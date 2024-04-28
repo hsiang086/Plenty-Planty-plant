@@ -1,26 +1,14 @@
-import os
-import sqlite3
 from flask import Flask, request
 import requests
 import json
 import socket
 import random
+from database import LEDDatabase
 
 app = Flask(__name__)
 
 config = json.load(open('config.json'))
-
-# Define the path to the database file
-DB_PATH = os.path.join(os.path.dirname(__file__), 'database', 'serverdata.db')
-
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS led_status (id INTEGER PRIMARY KEY, status INTEGER)''')
-    conn.commit()
-    conn.close()
-
-init_db()
+db = LEDDatabase()
 
 @app.route('/api/v1/humidity', methods=['GET'])
 def get_humidity():
@@ -33,7 +21,7 @@ def get_humidity():
     
 @app.route('/api/v1/led', methods=['GET'])
 def get_led():
-    led_status = get_led_status()
+    led_status = db.get_led_status()
     if led_status is not None:
         return str(1 if led_status else 0), 200
     else:
@@ -45,10 +33,10 @@ def set_led():
     if status:
         status = status.lower()  # Convert to lowercase for case-insensitive comparison
         if status == 'on':
-            set_led_status(True)
+            db.set_led_status(True)
             return "LED status set to ON", 200
         elif status == 'off':
-            set_led_status(False)
+            db.set_led_status(False)
             return "LED status set to OFF", 200
         else:
             return "Invalid status value. Please use 'on' or 'off'.", 400
@@ -70,24 +58,6 @@ def send_discord_message(humidity, message="I am thirsty!"):
     }
     res = requests.post(webhook_url, json=payload)
     return res.status_code
-
-def get_led_status():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''SELECT status FROM led_status ORDER BY id DESC LIMIT 1''')
-    row = c.fetchone()
-    conn.close()
-    if row:
-        return bool(row[0])
-    else:
-        return None
-
-def set_led_status(status):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT INTO led_status (status) VALUES (?)''', (int(status),))
-    conn.commit()
-    conn.close()
 
 if __name__ == '__main__':
     ip = get_ip_address()
