@@ -262,7 +262,14 @@ pyrightconfig.json
 # json
 config.json
 
+# PlatformIO
 firmware/plant/credentials.h
+
+# executables
+run
+
+# cli
+cli/
 
 # vscode
 .vscode/
