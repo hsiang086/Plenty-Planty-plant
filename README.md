@@ -33,7 +33,7 @@ const int soil_sensor =        12; // GPIO12
 const char* ssid =     "********";
 const char* password = "********";
 
-const String serverName = "http://192.168.1.109:1588/api/v1/humidity";
+const String serverName = "http://192.168.1.109:1588";
 
 String ledStatus;
 
