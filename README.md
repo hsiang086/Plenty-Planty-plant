@@ -28,7 +28,7 @@ ensure that you have add the `credentials.h` file to the `firmware/plant` direct
 ```cpp
 const int serial_baud_rate = 9600;
 const int soil_sensor =        36; // GPIO36
-const int soil_sensor =        12; // GPIO12
+const int led =                12; // GPIO12
 
 const char* ssid =     "********";
 const char* password = "********";
