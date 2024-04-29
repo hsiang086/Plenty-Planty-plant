@@ -47,7 +47,7 @@ async def get_led():
     if led_status is not None:
         return {"status": 1 if led_status else 0}
     else:
-        raise {"status": "off"}
+        return {"status": "off"}
 
 @app.get('/api/v1/setled')
 async def set_led(status: str = Query(..., description="LED status (on/off)")):
