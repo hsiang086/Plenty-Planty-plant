@@ -3,6 +3,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 #include "credentials.h"
 
@@ -33,18 +34,23 @@ class SendRequests {
         String getLedStatus() {
             http.begin(serverUrl + "/api/v1/led");
             int httpCode = http.GET();
-            String ledStatus;
-            if (httpCode > 0) {
-                ledStatus = http.getString();
+
+            if (httpCode == HTTP_CODE_OK) {
+                String payload = http.getString();
+                DynamicJsonDocument doc(1024);
+                deserializeJson(doc, payload);
+                int ledStatus = doc["status"];
                 Serial.print("HTTP status code: ");
                 Serial.println(httpCode);
                 Serial.print("LED status: ");
                 Serial.println(ledStatus);
+                http.end();
+                return String(ledStatus);
             } else {
                 Serial.println("Error on HTTP request");
+                http.end();
+                return "";
             }
-            http.end();
-            return ledStatus;
         }
 };
 

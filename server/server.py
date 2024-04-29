@@ -45,7 +45,7 @@ async def get_humidity(hu: float = Query(..., description="Humidity value")):
 async def get_led():
     led_status = await db.get_led_status()
     if led_status is not None:
-        return str(1 if led_status else 0)
+        return {"status": 1 if led_status else 0}
     else:
         raise HTTPException(status_code=404, detail="LED status not found")
 
