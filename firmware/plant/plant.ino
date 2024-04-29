@@ -9,14 +9,14 @@
 class SendRequests {
     private:
         HTTPClient http;
-        String serverName;
+        String serverUrl;
     public:
-        SendRequests(String serverName) {
-            this->serverName = serverName;
+        SendRequests(String serverUrl) {
+            this->serverUrl = serverUrl;
         }
 
         void sendHumidity(int soil_moisture) {
-            http.begin(serverName + "/api/vi/humidity?hu=" + String(soil_moisture));
+            http.begin(serverUrl + "/api/vi/humidity?hu=" + String(soil_moisture));
             int httpCode = http.GET();
             if (httpCode > 0) {
                 String payload = http.getString();
@@ -31,7 +31,7 @@ class SendRequests {
         }
 
         String getLedStatus() {
-            http.begin(serverName + "/api/v1/led");
+            http.begin(serverUrl + "/api/v1/led");
             int httpCode = http.GET();
             String ledStatus;
             if (httpCode > 0) {
@@ -48,7 +48,7 @@ class SendRequests {
         }
 };
 
-SendRequests sendRequests(serverName);
+SendRequests sendRequests(serverUrl);
 // WebServer server(80); // Uncomment this line to enable the server
 
 void setup() {
