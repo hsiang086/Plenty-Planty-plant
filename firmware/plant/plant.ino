@@ -18,7 +18,7 @@ class SendRequests {
         }
 
         void sendHumidity(int soil_moisture) {
-            http.begin(serverUrl + "/api/vi/humidity?hu=" + String(soil_moisture));
+            http.begin(serverUrl + "/api/v1/humidity?hu=" + String(soil_moisture));
             int httpCode = http.GET();
             if (httpCode > 0) {
                 String payload = http.getString();
