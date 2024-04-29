@@ -2,3 +2,4 @@
 # WiFi.h (built-in)
 # ArduinoJson (version 7.0.4)
 # HTTPClient (built-in)
+# LiquidCrystal_I2C (link:https://www.dropbox.com/s/xiw7gfn7c4lx4cx/LiquidCrystal_I2C-master.zip?dl=0)

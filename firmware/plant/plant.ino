@@ -97,21 +97,37 @@ void loop() {
             Serial.print("Soil moisture: ");
             Serial.println(soil_moisture);
             Serial.println("Not in use, please check the sensor.");
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Check Sensor");
         } else if (soil_moisture > 2000) {
             sendRequests.sendHumidity(soil_moisture);
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Humidity: ");
+            lcd.print(soil_moisture);
         } else {
             Serial.print("Soil moisture: ");
             Serial.println(soil_moisture);
             Serial.println("Soil moisture is enough, no need to send request.");
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Moisture OK");
         }
         ledStatus = sendRequests.getLedStatus();
         // Serial.println(ledStatus);
         if (ledStatus == String("1")) {
             digitalWrite(led, HIGH);
-        } else if (ledStatus == String("0")){
+            lcd.setCursor(0, 1);
+            lcd.print("LED: ON");
+        } else if (ledStatus == String("0")) {
             digitalWrite(led, LOW);
+            lcd.setCursor(0, 1);
+            lcd.print("LED: OFF");
         } else {
             Serial.println("LED status is not available.");
+            lcd.setCursor(0, 1);
+            lcd.print("LED: Unknown");
         }
         lastTime = millis();
     }
