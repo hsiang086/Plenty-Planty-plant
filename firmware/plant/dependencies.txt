@@ -1,4 +1,4 @@
 # Required Libraries
 # WiFi.h (built-in)
-# ArduinoJson (version 6.19.4)
+# ArduinoJson (version 7.0.4)
 # HTTPClient (built-in)

@@ -4,6 +4,7 @@
 #include <WebServer.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+#include <LiquidCrystal_I2C.h> 
 
 #include "credentials.h"
 
@@ -57,6 +58,17 @@ class SendRequests {
 SendRequests sendRequests(serverUrl);
 // WebServer server(80); // Uncomment this line to enable the server
 
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+void lcdinit(){
+    lcd.init();
+    lcd.backlight();
+    lcd.setCursor(0,0);
+    lcd.print("Hello, world!");
+    lcd.setCursor(0,1);
+    lcd.print("world, Hello!");
+}
+
 void setup() {
     Serial.begin(serial_baud_rate);
     pinMode(soil_sensor, INPUT);
@@ -72,6 +84,7 @@ void setup() {
     Serial.println(WiFi.localIP());
     Serial.println("WiFi status: ");
     WiFi.printDiag(Serial);
+    lcdinit();
     // setupRoutes(); // Uncomment this line to enable the server
     // startServer(); // Uncomment this line to enable the server
 }
