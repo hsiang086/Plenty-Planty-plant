@@ -20,6 +20,8 @@ To install and run the server, follow these steps:
     "PREFIX": "your_discord_bot_prefix",
 }
 ```
+or you can use `setup_config.py` to setup the config file (beta version)
+
 5. Run `python server.py` in the `server` directory to start the server
 6. Run `python bot.py` to start the bot
 

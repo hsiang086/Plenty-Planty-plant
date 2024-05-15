@@ -9,18 +9,21 @@ from fastapi import FastAPI, HTTPException, Query
 import aiohttp
 
 from database import ServerDatabase
+from api.runpod_api import RunpodAPI
 
 app = FastAPI()
 
 config = json.load(open('config.json'))
 db = ServerDatabase()
+rp = RunpodAPI(config)
 
 async def send_discord_message(humidity: float, message="I am thirsty!"):
+    response = await rp.main()
     webhook_url = config["WEBHOOK_URL"][random.randint(0, len(config["WEBHOOK_URL"])-1)]
     payload = {
         "username": "Plenty Planty Plant",
         "avatar_url": "https://watchandlearn.scholastic.com/content/dam/classroom-magazines/watchandlearn/videos/animals-and-plants/plants/what-are-plants-/What-Are-Plants.jpg",
-        "content": f"{message}, the humidity is `{humidity}`!",
+        "content": f"{response['output']['text'][0]}, btw the humidity is `{humidity}`!",
     }
     async with aiohttp.ClientSession() as session:
         async with session.post(webhook_url, json=payload) as response:
