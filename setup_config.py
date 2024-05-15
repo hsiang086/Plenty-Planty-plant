@@ -63,8 +63,12 @@ def setup_config(skip=False):
                 'message': 'Enter your Runpod API key  (optional leave empty to skip):',
             }, {
                 'type': 'input',
-                'name': 'runpod_api_url',
-                'message': 'Enter your Runpod API URL  (optional leave empty to skip):',
+                'name': 'runpod_api_LLM_url',
+                'message': 'Enter your Runpod LLM API URL  (optional leave empty to skip):',
+            }, {
+                'type': 'input',
+                'name': 'runpod_api_SD_url',
+                'message': 'Enter your Runpod SD API URL  (optional leave empty to skip):',
             },
         ]
         answers = PyInquirer.prompt(questions)
@@ -80,10 +84,17 @@ def setup_config(skip=False):
         if answers['openai_api_key']:
             config['OPENAI_APIKEY'] = answers['openai_api_key']
         if answers['runpod_api_key']:
-            config['RUNPOD_APIKEY'] = {
-                'key': answers['runpod_api_key'],
-                'url': answers['runpod_api_url'],
-            }
+            config['RUNPOD_APIKEY']['key'] = answers['runpod_api_key']
+        if answers['runpod_api_LLM_url']:
+            url = answers['runpod_api_LLM_url']
+            if url[-1] == '/':
+                url = url[:-1]
+            config['RUNPOD_APIKEY']['LLMurl'] = url
+        if answers['runpod_api_SD_url']:
+            url = answers['runpod_api_SD_url']
+            if url[-1] == '/':
+                url = url[:-1]
+            config['RUNPOD_APIKEY']['SDurl'] = url
         with open('config.json', 'w') as f:
             json.dump(config, f, indent=4)
         print(f"{bcolors.OKGREEN}Config file created successfully")

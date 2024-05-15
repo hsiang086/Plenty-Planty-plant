@@ -17,8 +17,8 @@ config = json.load(open('config.json'))
 db = ServerDatabase()
 rp = RunpodAPI(config)
 
-async def send_discord_message(humidity: float, message="I am thirsty!"):
-    response = await rp.main()
+async def send_discord_message(humidity: float):
+    response = await rp.Llm(hu=humidity, temperature=random.gauss(0.3, 0.125))
     webhook_url = config["WEBHOOK_URL"][random.randint(0, len(config["WEBHOOK_URL"])-1)]
     payload = {
         "username": "Plenty Planty Plant",

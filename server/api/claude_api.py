@@ -1,7 +1,7 @@
 import anthropic
-from api import LlmAPI
+from api import APIs
 
-class ClaudeAPI(LlmAPI):
+class ClaudeAPI(APIs):
     def __init__(self, config: dict):
         super().__init__(config)
         self.client = anthropic.Anthropic(api_key=self.config['CLAUDE_APIKEY'])
