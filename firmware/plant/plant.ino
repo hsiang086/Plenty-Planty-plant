@@ -56,18 +56,18 @@ class SendRequests {
 };
 
 SendRequests sendRequests(serverUrl);
-// WebServer server(80); // Uncomment this line to enable the server
+WebServer server(80); // Uncomment this line to enable the server
 
-LiquidCrystal_I2C lcd(0x27,16,2);
+// LiquidCrystal_I2C lcd(0x27,16,2);
 
-void lcdinit(){
-    lcd.init();
-    lcd.backlight();
-    lcd.setCursor(0,0);
-    lcd.print("Hello, world!");
-    lcd.setCursor(0,1);
-    lcd.print("world, Hello!");
-}
+// void lcdinit(){
+//     lcd.init();
+//     lcd.backlight();
+//     lcd.setCursor(0,0);
+//     lcd.print("Hello, world!");
+//     lcd.setCursor(0,1);
+//     lcd.print("world, Hello!");
+// }
 
 void setup() {
     Serial.begin(serial_baud_rate);
@@ -84,9 +84,9 @@ void setup() {
     Serial.println(WiFi.localIP());
     Serial.println("WiFi status: ");
     WiFi.printDiag(Serial);
-    lcdinit();
-    // setupRoutes(); // Uncomment this line to enable the server
-    // startServer(); // Uncomment this line to enable the server
+    // lcdinit();
+    setupRoutes(); // Uncomment this line to enable the server
+    startServer(); // Uncomment this line to enable the server
 }
 
 void loop() {
@@ -97,70 +97,80 @@ void loop() {
             Serial.print("Soil moisture: ");
             Serial.println(soil_moisture);
             Serial.println("Not in use, please check the sensor.");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Check Sensor");
+            // lcd.clear();
+            // lcd.setCursor(0, 0);
+            // lcd.print("Check Sensor");
         } else if (soil_moisture > 2000) {
             sendRequests.sendHumidity(soil_moisture);
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Humidity: ");
-            lcd.print(soil_moisture);
+            // lcd.clear();
+            // lcd.setCursor(0, 0);
+            // lcd.print("Humidity: ");
+            // lcd.print(soil_moisture);
         } else {
             Serial.print("Soil moisture: ");
             Serial.println(soil_moisture);
             Serial.println("Soil moisture is enough, no need to send request.");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Moisture OK");
+            // lcd.clear();
+            // lcd.setCursor(0, 0);
+            // lcd.print("Moisture OK");
         }
         ledStatus = sendRequests.getLedStatus();
         // Serial.println(ledStatus);
         if (ledStatus == String("1")) {
             digitalWrite(led, HIGH);
-            lcd.setCursor(0, 1);
-            lcd.print("LED: ON");
+            // lcd.setCursor(0, 1);
+            // lcd.print("LED: ON");
         } else if (ledStatus == String("0")) {
             digitalWrite(led, LOW);
-            lcd.setCursor(0, 1);
-            lcd.print("LED: OFF");
+            // lcd.setCursor(0, 1);
+            // lcd.print("LED: OFF");
         } else {
             Serial.println("LED status is not available.");
-            lcd.setCursor(0, 1);
-            lcd.print("LED: Unknown");
+            // lcd.setCursor(0, 1);
+            // lcd.print("LED: Unknown");
         }
         lastTime = millis();
     }
 }
 
-// void handleRoot() {
-//     server.send(200, "text/plain", "Hello from ESP32!");
-// }
+void handleRoot() {
+    server.send(
+        200,
+        "text/html",
+        "<!DOCTYPE html>\n"\
+        "<html>\n"\
+        "<head>\n"\
+        "<title>Set Url</title>\n"\
+        "</head>\n"\
+        "<body>\n"\
+        "<h1>Set Url</h1>\n"\
+        "<form action=\"/uuu\" method=\"post\">\n"\
+        "<label for=\"url\">Url:</label>\n"\
+        "<input type=\"text\" id=\"url\" name=\"url\"><br><br>\n"\
+        "<input type=\"submit\" value=\"Submit\">\n"\
+        "</form>\n"\
+        "</body>\n"\
+        "</html>"
+    )
+}
 
-// void handleLedAPI() {
-//     if (server.hasArg("color")) {
-//         String color = server.arg("color");
-//         if (color == "1") {
-//             digitalWrite(led, HIGH);
-//             server.send(200, "text/plain", "LED is on");  
-//         } else {
-//             digitalWrite(led, LOW);
-//             server.send(200, "text/plain", "LED is off");
-//         }
-//     }
-// }
+void handleUrl() {
+    String url = server.arg("url");
+    sendRequests = SendRequests(url);
+    server.send(200, "text/plain", "Url set to " + url);
+}
 
-// void handleNotFound() {
-//     server.send(404, "text/plain", "Not found");
-// }
+void handleNotFound() {
+    server.send(404, "text/plain", "Not found");
+}
 
-// void setupRoutes() {
-//     server.on("/", HTTP_GET, handleRoot);
-//     server.on("/api/v1/led", HTTP_GET, handleLedAPI);
-//     server.onNotFound(handleNotFound);
-// }
+void setupRoutes() {
+    server.on("/", HTTP_GET, handleRoot);
+    server.on("/uuu", HTTP_POST, handleUrl);
+    server.onNotFound(handleNotFound);
+}
 
-// void startServer() {
-//     server.begin();
-//     Serial.println("HTTP server started at " + WiFi.localIP().toString());
-// }
+void startServer() {
+    server.begin();
+    Serial.println("HTTP server started at " + WiFi.localIP().toString());
+}
